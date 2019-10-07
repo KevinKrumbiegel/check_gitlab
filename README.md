@@ -6,7 +6,7 @@ Nagios plugin for doing a GitLab health check.
 ### In Nagios:
 1. Download the check_gitlab file. (i.e. using `wget -P ~/ https://github.com/KevinKrumbiegel/check_gitlab/blob/master/check_gitlab`)
 2. Mark the file as executable (i.e. using `sudo chmod +x ~/check_gitlab`)
-3. Move the file to /usr/lib/nagios/plugins/ (i.e. using `mv ~/check_gitlab /usr/lib/nagios/plugins/check_gitlab)
+3. Move the file to /usr/lib/nagios/plugins/ (i.e. using `mv ~/check_gitlab /usr/lib/nagios/plugins/check_gitlab`)
 4. Optionally use the gitlab.conf file as a CheckCommand definition in icinga2 (by default all checks will be executed)
 
 ### Standalone:
@@ -15,7 +15,8 @@ Nagios plugin for doing a GitLab health check.
 
 Copyright (c) 2019 Kevin Krumbiegel"
 
-Usage: ./check_gitlab -s <server_url> [-h] [--cache-check] [--db-check] [--gitaly-check] [--queues-check] [--redis-check] [--shared-state-check]
+Usage: 
+```check_gitlab -s <server_url> [-h] [--cache-check] [--db-check] [--gitaly-check] [--queues-check] [--redis-check] [--shared-state-check]```
 
 -s <server_url>      = URL of the server to be checked. (i.e. https://gitlab.example.org/)
 -h                   = This screen
@@ -36,8 +37,6 @@ If an exception occurs or the check is executed with bad parameter configuration
 ## Further information
 
 For further information see:
-[GitLab web page](https://about.gitlab.com/)
-
-[GitLab Health Check documentation](https://docs.gitlab.com/ee/user/admin_area/monitoring/health_check.html)
-
-[Icinga](https://icinga.com/)
+* [GitLab web page](https://about.gitlab.com/)
+* [GitLab Health Check documentation](https://docs.gitlab.com/ee/user/admin_area/monitoring/health_check.html)
+* [Icinga](https://icinga.com/)
