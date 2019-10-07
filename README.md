@@ -18,15 +18,16 @@ Copyright (c) 2019 Kevin Krumbiegel"
 Usage: 
 ```check_gitlab -s <server_url> [-h] [--cache-check] [--db-check] [--gitaly-check] [--queues-check] [--redis-check] [--shared-state-check]```
 
-* `-s <server_url>`      = URL of the server to be checked. (i.e. https://gitlab.example.org/)
-* `-h`                   = This screen
+* General
+  * `-s <server_url>`      = URL of the server to be checked. (i.e. https://gitlab.example.org/)
+  * `-h`                   = This screen
 * Checks:
-* `--check-cache`        = Enable checking cache status
-* `--check-db`           = Enable checking database status
-* `--check-gitaly`       = Enable checking gitaly status
-* `--check-queues`       = Enable checking queues status
-* `--check-redis`        = Enable checking redis status
-* `--check-shared-state` = Enable checking shared state status
+  * `--check-cache`        = Enable checking cache status
+  * `--check-db`           = Enable checking database status
+  * `--check-gitaly`       = Enable checking gitaly status
+  * `--check-queues`       = Enable checking queues status
+  * `--check-redis`        = Enable checking redis status
+  * `--check-shared-state` = Enable checking shared state status
 
 ## Background
 The check_gitlab script queries the JSON-API endpoint of a GitLab server using the "Liveness" feature.
