@@ -22,6 +22,7 @@ Usage:
   * `-s <server_url>`      = URL of the server to be checked. (i.e. https://gitlab.example.org/)
   * `-h`                   = This screen
 * Checks:
+  * `--check-all`          = Enable all checks
   * `--check-cache`        = Enable checking cache status
   * `--check-db`           = Enable checking database status
   * `--check-gitaly`       = Enable checking gitaly status
@@ -30,7 +31,7 @@ Usage:
   * `--check-shared-state` = Enable checking shared state status
 
 ## Background
-The check_gitlab script queries the JSON-API endpoint of a GitLab server using the "Liveness" feature.
+The check_gitlab script queries the JSON-API endpoint of a GitLab server using the "Readiness" feature.
 By now it checks whether the status of all specified modules is "ok".
 In case the status is not okay, a cricital condition will be reported.
 If an exception occurs or the check is executed with bad parameter configuration, an unknown condition will be reported.

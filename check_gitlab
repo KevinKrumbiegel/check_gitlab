@@ -7,29 +7,36 @@ import urllib.request
 
 program_name = "check_gitlab"
 
-def get_liveness(server):
+def get_readiness(server):
     if (not server.endswith("/", 0)):
         server = server + "/"
 
-    request = urllib.request.urlopen(server + "-/liveness")
+    request = urllib.request.urlopen(server + "-/readiness")
     responseStr = str(request.read().decode("utf-8"))
 
     return json.loads(responseStr)
 
-def check_module(liveness_json, module):
-    status = liveness_json.get(module).get("status")
-    message = liveness_json.get(module).get("message")
+def check_module(readiness_json, module):
+    try:
+        status = readiness_json[module][0]["status"]
+    except:
+        status = "unknown"
+
+    try:
+        message = readiness_json[module][0]["message"]
+    except:
+        message = ""
 
     return status, message
 
-def check_all(liveness_json):
+def check_all(readiness_json):
     results = dict()
-    results["db_check"] = check_module(liveness_json, "db_check")
-    results["redis_check"] = check_module(liveness_json, "redis_check")
-    results["cache_check"] = check_module(liveness_json, "cache_check")
-    results["queues_check"] = check_module(liveness_json, "queues_check")
-    results["shared_state_check"] = check_module(liveness_json, "shared_state_check")
-    results["gitaly_check"] = check_module(liveness_json, "gitaly_check")
+    results["db_check"] = check_module(readiness_json, "db_check")
+    results["redis_check"] = check_module(readiness_json, "redis_check")
+    results["cache_check"] = check_module(readiness_json, "cache_check")
+    results["queues_check"] = check_module(readiness_json, "queues_check")
+    results["shared_state_check"] = check_module(readiness_json, "shared_state_check")
+    results["gitaly_check"] = check_module(readiness_json, "gitaly_check")
 
     return results
 
@@ -37,6 +44,7 @@ def parse_arguments(argv):
     argument_map = dict()
     argument_map["-h"] = 0
     argument_map["-s"] = ""
+    argument_map["--check-all"] = 0
     argument_map["--check-cache"] = 0
     argument_map["--check-db"] = 0
     argument_map["--check-gitaly"] = 0
@@ -57,14 +65,14 @@ def parse_arguments(argv):
 
         prev_argument = argument
 
-    if (len(argument_map) != 8):
+    if (len(argument_map) != 9):
         print_usage()
         sys.exit(3)
 
     return argument_map
 
 def print_usage():
-    print("Usage: " + program_name + " -s <server_url> [-h] [--cache-check] [--db-check] [--gitaly-check] [--queues-check] [--redis-check] [--shared-state-check]")
+    print("Usage: " + program_name + " -s <server_url> [-h] [---check-all] [--check-cache] [--check-db] [--check-gitaly] [--check-queues] [--check-redis] [--check-shared-state]")
 
 def print_help():
     print("Copyright (c) 2019 Kevin Krumbiegel")
@@ -74,6 +82,7 @@ def print_help():
     print("-s <server_url>      = URL of the server to be checked. (i.e. https://gitlab.example.org/)")
     print("-h                   = This screen")
     print("Checks:")
+    print("--check-all          = Enable all checks")
     print("--check-cache        = Enable checking cache status")
     print("--check-db           = Enable checking database status")
     print("--check-gitaly       = Enable checking gitaly status")
@@ -83,41 +92,41 @@ def print_help():
     print("\n")
 
 def run_checks(arguments):
-    checks = check_all(get_liveness(arguments["-s"]))
+    checks = check_all(get_readiness(arguments["-s"]))
     result = 0
     checks_done = 0
 
-    if arguments["--check-cache"]:
+    if arguments["--check-cache"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["cache_check"][0]) != "ok":
             print("Cache check: Status=" + str(checks["cache_check"][0]) + ", Message=" + str(checks["cache_check"][1]))
             result = 2
 
-    if arguments["--check-db"]:
+    if arguments["--check-db"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["db_check"][0]) != "ok":
             print("Database check: Status=" + str(checks["db_check"][0]) + ", Message=" + str(checks["db_check"][1]))
             result = 2
 
-    if arguments["--check-gitaly"]:
+    if arguments["--check-gitaly"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["gitaly_check"][0]) != "ok":
             print("Gitaly check: Status=" + str(checks["gitaly_check"][0]) + ", Message=" + str(checks["gitaly_check"][1]))
             result = 2
 
-    if arguments["--check-queues"]:
+    if arguments["--check-queues"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["queues_check"][0]) != "ok":
             print("Queues check: Status=" + str(checks["queues_check"][0]) + ", Message=" + str(checks["queues_check"][1]))
             result = 2
 
-    if arguments["--check-redis"] > 0:
+    if arguments["--check-redis"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["redis_check"][0]) != "ok":
             print("Redis check: Status=" + str(checks["redis_check"][0]) + ", Message=" + str(checks["redis_check"][1]))
             result = 2
 
-    if arguments["--check-shared-state"]:
+    if arguments["--check-shared-state"] or arguments["--check-all"]:
         checks_done += 1
         if str(checks["shared_state_check"][0]) != "ok":
             print("Shared state check: Status=" + str(checks["shared_state_check"][0]) + ", Message=" + str(checks["shared_state_check"][1]))
