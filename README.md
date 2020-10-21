@@ -1,5 +1,6 @@
 # check_gitlab
 Nagios plugin for doing a GitLab health check.
+Copyright (c) 2020 Kevin Krumbiegel
 
 ## Usage:
 
@@ -13,14 +14,12 @@ Nagios plugin for doing a GitLab health check.
 1. Download the check_gitlab file. (i.e. using `wget -P ~/ https://github.com/KevinKrumbiegel/check_gitlab/blob/master/check_gitlab`)
 2. Execute the file (Python needs to be installed)
 
-Copyright (c) 2019 Kevin Krumbiegel"
-
 Usage: 
 ```check_gitlab -s <server_url> [-h] [--cache-check] [--db-check] [--gitaly-check] [--queues-check] [--redis-check] [--shared-state-check]```
 
 * General
   * `-s <server_url>`      = URL of the server to be checked. (i.e. https://gitlab.example.org/)
-  * `-h`                   = This screen
+  * `-h`                   = This help screen
 * Checks:
   * `--check-all`          = Enable all checks
   * `--check-cache`        = Enable checking cache status
